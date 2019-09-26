@@ -48,6 +48,10 @@ gem install stockpot
 
 ## Rails App
 
+## !! Warning !!
+
+**You should only enable this in environments that are **NOT** production. If you choose to ignore this warning, do so at your own risk!! Wrap the following in a check for environments with something like `Rails.env.test?`**
+
 Add the `Stockpot` engine to your `/config/routes.rb` file, changing the base path if you'd like to:
 
 ```ruby

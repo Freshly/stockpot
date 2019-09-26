@@ -6,7 +6,7 @@ Stockpot::Engine.routes.draw do
   delete "/records", to: "records#destroy"
   put "/records", to: "records#update"
 
-  post "/clean_database", to: "database_cleaner#index"
+  delete "/clean_database", to: "database_cleaner#index"
 
   get "/redis", to: "redis#index"
   post "/redis", to: "redis#create"

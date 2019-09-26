@@ -15,3 +15,7 @@ require "rspec/core/rake_task"
 load "rails/tasks/engine.rake"
 
 Bundler::GemHelper.install_tasks
+
+task :release do
+  sh "bundle exec rake release"
+end

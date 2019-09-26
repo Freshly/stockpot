@@ -6,7 +6,8 @@
 
 - Initial release
 
-## v0.1.0
+## v0.16.3.pre
+_released from spicerack initially_
 
 *Release Date*: 9/19/2019
 

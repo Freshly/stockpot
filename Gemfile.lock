@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    stockpot (0.1.1)
+    stockpot (0.1.2)
       database_cleaner (~> 1.6.2)
       factory_bot_rails (~> 4.8.2)
       rails (= 5.2.3)

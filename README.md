@@ -44,8 +44,9 @@ gem install stockpot
 ```
 
 ## Usage
+---
 
-### Rails App
+## Rails App
 
 Add the `Stockpot` engine to your `/config/routes.rb` file, changing the base path if you'd like to:
 
@@ -55,20 +56,98 @@ mount Stockpot::Engine, at: "/stockpot"`
 
 This will give you the following [routes](/config/routes.rb) (assuming the default "/stockpot" path):
 
-* `/stockpot/records`
-  * GET - Query for data
-  * POST - Create new data
-  * DELETE - Remove data
-  * PUT - Update data
+### `/stockpot/records`
 
-* `/stockpot/clean_database`
-  * DELETE - Clears Rails & Redis caches and truncates Active Records databases.
+#### GET
 
-* `/stockpot/redis`
-  * GET - Query for data
-  * POST - Create new data
+Query for data. Accepts a array of objects that require at least a model name, but can also include additional qualifying data.
 
-### Cypress/External Suite
+```javascript
+[
+  { model: "user" },
+  { model: "address" }
+]
+// or
+[
+  { model: "user", id: "foo"
+]
+```
+
+#### POST
+
+Create new data. Accepts an object specifying a single model with additional qualifiers.
+
+* factory (required) - Specify which factory to create a record with.
+* list (optional) - Specify a count of items to create, default: 1
+* traits (optional) - An array of strings specifying any traits you may want to use with your data. Applies to all records created.
+* attributes (optional) - An array of objects allowing for the specification of data to be used when creating records. Array position matches with list order if multiple records are desired.
+
+```javascript
+{
+  factory: "user",
+  traits: ["having_address"],
+  attributes: [{
+    email: "foo@bar.com",
+    password: "baz",
+    first_name: "Foo",
+    last_name: "Bar"
+  }]
+}
+```
+
+#### DELETE
+
+Remove data. Accepts the same type of input as GET
+
+#### PUT
+
+Update data Accepts an array of objects with each object specifying the model type to be updated along with the data to update. Input is uses the same base as GET and DELETE, but also accepts an `update` object allowing for the specification of the data to be updated.
+
+```javascript
+[
+  {
+    model: "user",
+    user_id: "123",
+    update: {
+      status: "active",
+      email: "foo@bar.com"
+    }
+  }
+]
+```
+
+### `/stockpot/clean_database`
+
+#### DELETE
+
+Clears Rails & Redis caches and truncates Active Records databases. No body required.
+
+### `/stockpot/redis`
+
+#### GET
+  
+Query for data. Accepts key or field to use to search cache for record.
+
+```javascript
+{
+  key: "123",
+  field: "foo"
+}
+```
+
+#### POST - Create new data
+
+Accepts an object specifying a key, field, and value to be inserted into Redis cache.
+
+```javascript
+{
+  key: "123",
+  field: "foo",
+  value: "bar"
+}
+```
+
+## Cypress/External Suite Examples
 
 We utilize Cypress commands to abstract out helpers for setting up state such as
 

@@ -10,7 +10,6 @@ APP_RAKEFILE = File.expand_path("spec/dummy/Rakefile", __dir__)
 
 require File.expand_path("../spec/dummy/config/application", __FILE__)
 require "bundler/gem_tasks"
-require "rspec/core/rake_task"
 
 load "rails/tasks/engine.rake"
 
@@ -18,4 +17,11 @@ Bundler::GemHelper.install_tasks
 
 task :release do
   sh "bundle exec rake release"
+end
+
+begin
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+  puts "Please run `bundle install` to install rspec and other dependencies and try again!"
 end

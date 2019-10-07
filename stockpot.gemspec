@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = "lib"
 
   spec.add_dependency "rails", "5.2.3"
-  spec.add_dependency "factory_bot_rails", "~> 4.8.2"
+  spec.add_dependency "factory_bot_rails", "~> 5.1.0"
   spec.add_dependency "database_cleaner", "~> 1.6.2"
   spec.add_dependency "redis", "~> 3.3.5"
   spec.add_dependency "timecop", "~> 0.8"

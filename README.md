@@ -55,7 +55,7 @@ gem install stockpot
 Add the `Stockpot` engine to your `/config/routes.rb` file, changing the base path if you'd like to:
 
 ```ruby
-mount Stockpot::Engine, at: "/stockpot"`
+mount Stockpot::Engine, at: "/stockpot"
 ```
 
 This will give you the following [routes](/config/routes.rb) (assuming the default "/stockpot" path):

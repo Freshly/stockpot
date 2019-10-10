@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   spec.require_paths = "lib"
 
-  spec.add_dependency "rails", "5.2.3"
+  spec.add_dependency "rails", ">=5.2.3"
   spec.add_dependency "factory_bot_rails", "~> 5.1.0"
   spec.add_dependency "database_cleaner", "~> 1.6.2"
   spec.add_dependency "redis", "~> 3.3.5"

@@ -16,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the README's data around development and contributing.
 ([#1](https://github.com/Freshly/stockpot/pull/1) [jaysonesmith])
 
+## [v0.1.3] - 2019-10-01
+
+### Changed
+
+- Updated Gemfile to correctly include all needed files for routes
+([jaysonesmith])
+- Added warning to README about guarding against loading Stockpot routes in production. (Need to set this to opt in rather than opt out. Aka, force to only run in test by default)
+([jaysonesmith])
+
 ## [v0.1.2] - 2019-09-26
 
 ### Added
@@ -37,12 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Claim gem name ([jaysonesmith])
   - Note: Released from spicerack initially.
 
-
 <!-- Releases -->
-[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.1.3...HEAD
+[v0.1.3]: https://github.com/Freshly/stockpot/compare/v0.1.2...v0.1.3
 [v0.1.2]: https://github.com/Freshly/stockpot/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/Freshly/stockpot/releases/tag/v0.1.1
-
 
 <!-- Contributors -->
 [jaysonesmith]: https://github.com/jaysonesmith

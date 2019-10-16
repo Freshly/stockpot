@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the README's data around development and contributing.
 ([#1](https://github.com/Freshly/stockpot/pull/1) [jaysonesmith])
 
+## [v0.1.4] - 2019-10-01
+
+### Fixed
+
+- Removed extra backtick from Gemfile ([jaysonesmith])
+
 ## [v0.1.3] - 2019-10-01
 
 ### Changed

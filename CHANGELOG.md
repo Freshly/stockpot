@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.2.0] - 2019-10-17
+
 ### Added
 
 - Added very basic `healthz` route for easily checking whether Stockpot's routes have been loaded correctly. ([#3](https://github.com/Freshly/stockpot/pull/3) [jaysonesmith])
@@ -67,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Note: Released from spicerack initially.
 
 <!-- Releases -->
-[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/Freshly/stockpot/compare/v0.1.6...v0.2.0
 [v0.1.6]: https://github.com/Freshly/stockpot/compare/v0.1.5...v0.1.6
 [v0.1.5]: https://github.com/Freshly/stockpot/compare/v0.1.4...v0.1.5
 [v0.1.4]: https://github.com/Freshly/stockpot/compare/v0.1.3...v0.1.4

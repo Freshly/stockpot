@@ -10,4 +10,6 @@ Stockpot::Engine.routes.draw do
 
   get "/redis", to: "redis#index"
   post "/redis", to: "redis#create"
+
+  get "/healthz", to: "healthz#index"
 end

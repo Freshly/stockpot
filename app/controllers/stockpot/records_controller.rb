@@ -17,7 +17,7 @@ module Stockpot
         obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model))
       end
 
-      render json: obj.to_json, status: :ok
+      render json: obj, status: :ok
     end
 
     def create
@@ -28,7 +28,9 @@ module Stockpot
         if params[:traits].present? && params[:attributes].present?
           FactoryBot.create(factory, *traits, attributes[n])
         elsif params[:traits].blank? && params[:attributes].blank?
+          # rubocop:disable Rails/SaveBang
           FactoryBot.create(factory)
+          # rubocop:enable Rails/SaveBang
         elsif params[:attributes].blank?
           FactoryBot.create(factory, *traits)
         elsif params[:traits].blank?
@@ -36,7 +38,7 @@ module Stockpot
         end
       end
       obj = factory.to_s.camelize.constantize.last(list)
-      render json: obj.to_json, status: :created
+      render json: obj, status: :created
     end
 
     def destroy
@@ -48,7 +50,7 @@ module Stockpot
         obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model)).destroy_all
       end
 
-      render json: obj.to_json, status: :accepted
+      render json: obj, status: :accepted
     end
 
     def update
@@ -61,7 +63,7 @@ module Stockpot
         obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model, :update)).update(update_params)
       end
 
-      render json: obj.to_json, status: :accepted
+      render json: obj, status: :accepted
     end
 
     private

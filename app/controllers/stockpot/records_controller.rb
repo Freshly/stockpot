@@ -28,7 +28,9 @@ module Stockpot
         if params[:traits].present? && params[:attributes].present?
           FactoryBot.create(factory, *traits, attributes[n])
         elsif params[:traits].blank? && params[:attributes].blank?
+          # rubocop:disable Rails/SaveBang
           FactoryBot.create(factory)
+          # rubocop:enable Rails/SaveBang
         elsif params[:attributes].blank?
           FactoryBot.create(factory, *traits)
         elsif params[:traits].blank?

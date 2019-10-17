@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Removed bang from `create` call in records controller ([#2](https://github.com/Freshly/stockpot/pull/2) [corbettbw])
+
 ## [v0.1.6] - 2019-10-10
 
 ### Changed
@@ -23,8 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Cleaned up README ([jaysonesmith])
 - CHANGELOG formatting changes ([#1](https://github.com/Freshly/stockpot/pull/1) [jaysonesmith])
-- Updated the README's data around development and contributing.
-([#1](https://github.com/Freshly/stockpot/pull/1) [jaysonesmith])
+- Updated the README's data around development and contributing. ([#1](https://github.com/Freshly/stockpot/pull/1) [jaysonesmith])
 
 ## [v0.1.4] - 2019-10-01
 
@@ -36,17 +39,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated gemspec to correctly include all needed files for routes
-([jaysonesmith])
-- Added warning to README about guarding against loading Stockpot routes in production. (Need to set this to opt in rather than opt out. Aka, force to only run in test by default)
-([jaysonesmith])
+- Updated gemspec to correctly include all needed files for routes ([jaysonesmith])
+- Added warning to README about guarding against loading Stockpot routes in production. (Need to set this to opt in rather than opt out. Aka, force to only run in test by default) ([jaysonesmith])
 
 ## [v0.1.2] - 2019-09-26
 
 ### Added
 
-- Added initial API documentation for Stockpot routes to README and updated formatting.
-([jaysonesmith])
+- Added initial API documentation for Stockpot routes to README and updated formatting. ([jaysonesmith])
 
 ### Removed
 
@@ -72,4 +72,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.1]: https://github.com/Freshly/stockpot/releases/tag/v0.1.1
 
 <!-- Contributors -->
+[corbettbw]: https://github.com/corbettbw
 [jaysonesmith]: https://github.com/jaysonesmith

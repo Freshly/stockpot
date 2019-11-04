@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Loosened Redis version in gemspec. ([#4](https://github.com/Freshly/stockpot/pull/4) [jaysonesmith])
+
 ## [v0.2.0] - 2019-10-17
 
 ### Added

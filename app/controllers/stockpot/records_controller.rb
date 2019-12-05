@@ -72,7 +72,7 @@ module Stockpot
     end
 
     def attributes(n)
-      return unless params[:attributes][n].present?
+      return unless params[:attributes].present?
       params.permit![:attributes][n].to_h
     end
 

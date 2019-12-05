@@ -30,8 +30,8 @@ module Stockpot
         all_parameters = Array.wrap([factory, *traits, attributes(n)]).compact
         FactoryBot.create(*all_parameters)
       end
-      obj = params[:factory].to_s.camelize.constantize.last(list)
-      render json: obj.to_json, status: :created
+      obj = factory.to_s.camelize.constantize.last(list)
+      render json: obj, status: :created
     end
 
     def destroy

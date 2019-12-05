@@ -7,6 +7,7 @@ require "factory_bot_rails"
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
+
     before_action only: [:index, :destroy, :update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
@@ -31,7 +32,7 @@ module Stockpot
         FactoryBot.create(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)
-      render json: obj, status: :created
+      render json: obj , status: :created
     end
 
     def destroy
@@ -58,7 +59,7 @@ module Stockpot
     private
 
     def return_error(message, status)
-      render json: { "error": { "status": status, "message": message }}.to_json, status: status
+      render json: { "error": { "status": status, "message": message }}, status: status
     end
 
     def traits

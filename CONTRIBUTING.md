@@ -8,7 +8,9 @@ Stockpot is a [Rails Engine](https://guides.rubyonrails.org/engines.html) which 
 
 The project's repo will look _similar_ to a Rails app, though very pared down. There's an app directory, but inside you'll only find controllers. As Stockpot is just an API that returns JSON, there's no need for views, and, for now, there's also no need for models, so you won't find them there either.
 
-## Working with the code
+# Working with the code
+
+## PRs
 
 - Make sure to update the [CHANGELOG](CHANGELOG.md) with your changes.
   - Please follow the existing [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format
@@ -18,9 +20,7 @@ The project's repo will look _similar_ to a Rails app, though very pared down. T
 
 ## Releases
 
-### How
-
-If you have the ability to release new versions of Stockpot, here are the steps:
+When changes on Master need to be released, the following steps should be followed, assuming you have release priveledges.
 
 - Update the version number in [version.rb](./lib/stockpot/version.rb)
 - Run `bundle` so that the [Gemfile.lock](Gemfile.lock) gets updated.

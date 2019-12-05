@@ -32,7 +32,7 @@ module Stockpot
         FactoryBot.create(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)
-      render json: obj , status: :created
+      render json: obj, status: :created
     end
 
     def destroy

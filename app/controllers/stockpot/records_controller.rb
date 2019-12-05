@@ -7,12 +7,11 @@ require "factory_bot_rails"
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
-    include AbstractController::Callbacks::ClassMethods
     before_action only: [:index, :destroy, :update] do
-      return_error("You need to provide at least one model name as an argument", 400) && return if params.dig(:models).blank?
+      return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
     before_action only: [:create] do
-      return_error("You need to provide at least one factory name as an argument", 400) && return if params.dig(:factory).blank?
+      return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
     end
 
     def index
@@ -73,7 +72,7 @@ module Stockpot
 
     def attributes(n)
       return unless params[:attributes].present?
-      params.permit![:attributes].map(&:to_h)[n]
+      params.permit![:attributes][n].to_h
     end
 
     def models

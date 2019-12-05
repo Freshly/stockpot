@@ -7,7 +7,6 @@ require "factory_bot_rails"
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
-
     before_action only: [:index, :destroy, :update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end

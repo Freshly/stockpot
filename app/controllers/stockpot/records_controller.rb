@@ -27,7 +27,7 @@ module Stockpot
     def create
       list = params[:list] || 1
       list.times do |n|
-        all_parameters = Array.wrap([factory, *traits, attributes(n)]).compact
+        all_parameters = [factory, *traits, attributes(n)].compact
         FactoryBot.create(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)

@@ -7,10 +7,10 @@ require "factory_bot_rails"
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
-    before_action only: [:index, :destroy, :update] do
+    before_action only: %i[index destroy update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
-    before_action only: [:create] do
+    before_action only: %i[create] do
       return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
     end
 
@@ -27,8 +27,8 @@ module Stockpot
     def create
       list = params[:list] || 1
       list.times do |n|
-        all_parameters = [factory, *traits, attributes(n)].compact
-        FactoryBot.create(*all_parameters)
+        all_parameters = [ factory, *traits, attributes(n) ].compact
+        FactoryBot.create!(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)
       render json: obj, status: :created
@@ -62,7 +62,8 @@ module Stockpot
     end
 
     def traits
-      return unless params[:traits].present?
+      return if params[:traits].blank?
+
       params[:traits].map(&:to_sym)
     end
 
@@ -70,8 +71,11 @@ module Stockpot
       params[:factory].to_sym
     end
 
+    # rubocop:disable Naming/UncommunicativeMethodParamName
     def attributes(n)
-      return unless params[:attributes].present?
+      # rubocop:enable Naming/UncommunicativeMethodParamName
+      return if params[:attributes].blank?
+
       params.permit![:attributes][n].to_h
     end
 

@@ -7,6 +7,7 @@ require "factory_bot_rails"
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
+
     before_action only: %i[index destroy update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
@@ -18,10 +19,13 @@ module Stockpot
       obj = {}
       models.each_with_index do |element, i|
         model = element[:model].to_s
+
         obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model))
       end
 
       render json: obj, status: :ok
+    rescue StandardError => exception
+      rescue_error(exception)
     end
 
     def create
@@ -31,7 +35,10 @@ module Stockpot
         FactoryBot.create!(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)
+
       render json: obj, status: :created
+    rescue StandardError => exception
+      rescue_error(exception)
     end
 
     def destroy
@@ -42,6 +49,8 @@ module Stockpot
       end
 
       render json: obj, status: :accepted
+    rescue StandardError => exception
+      rescue_error(exception)
     end
 
     def update
@@ -53,9 +62,25 @@ module Stockpot
       end
 
       render json: obj, status: :accepted
+    rescue StandardError => exception
+      rescue_error(exception)
     end
 
     private
+
+    def rescue_error(error)
+      logger = Logger.new(STDERR)
+      logger.warn(error)
+
+      case error
+      when NameError
+        return_error(error.to_s, :bad_request)
+      when PG::Error
+        return_error("Database error: #{error}", :server_error)
+      else
+        return_error(error.to_s, :server_error)
+      end
+    end
 
     def return_error(message, status)
       render json: { "error": { "status": status, "message": message }}, status: status

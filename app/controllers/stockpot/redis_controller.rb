@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../../lib/stockpot/errors"
+
 module Stockpot
   class RedisController < ActionController::Base
     def index
@@ -12,7 +14,11 @@ module Stockpot
       end
 
       render json: record.to_json, status: :ok
+    rescue StandardError => exception
+      render Errors.rescue_error(exception)
     end
+    
+    private
 
     def create
       if params[:field].present?
@@ -24,6 +30,8 @@ module Stockpot
       end
 
       render json: { status: 201 }
+    rescue StandardError => exception
+      render Errors.rescue_error(exception)
     end
   end
 end

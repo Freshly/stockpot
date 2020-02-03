@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_dependency "stockpot/application_controller"
+require_relative "../../../lib/stockpot/errors"
 
 require "factory_bot_rails"
 
@@ -9,10 +10,10 @@ module Stockpot
     include ActiveSupport::Inflector
 
     before_action only: %i[index destroy update] do
-      return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
+      Errors.return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
     before_action only: %i[create] do
-      return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
+      Errors.return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
     end
 
     def index
@@ -25,7 +26,7 @@ module Stockpot
 
       render json: obj, status: :ok
     rescue StandardError => exception
-      rescue_error(exception)
+      render Errors.rescue_error(exception)
     end
 
     def create
@@ -38,7 +39,7 @@ module Stockpot
 
       render json: obj, status: :created
     rescue StandardError => exception
-      rescue_error(exception)
+      render Errors.rescue_error(exception)
     end
 
     def destroy
@@ -50,7 +51,7 @@ module Stockpot
 
       render json: obj, status: :accepted
     rescue StandardError => exception
-      rescue_error(exception)
+      render Errors.rescue_error(exception)
     end
 
     def update
@@ -63,28 +64,10 @@ module Stockpot
 
       render json: obj, status: :accepted
     rescue StandardError => exception
-      rescue_error(exception)
+      render Errors.rescue_error(exception)
     end
 
     private
-
-    def rescue_error(error)
-      logger = Logger.new(STDERR)
-      logger.warn(error)
-
-      case error
-      when NameError
-        return_error(error.to_s, :bad_request)
-      when PG::Error
-        return_error("Database error: #{error}", :server_error)
-      else
-        return_error(error.to_s, :server_error)
-      end
-    end
-
-    def return_error(message, status)
-      render json: { "error": { "status": status, "message": message }}, status: status
-    end
 
     def traits
       return if params[:traits].blank?

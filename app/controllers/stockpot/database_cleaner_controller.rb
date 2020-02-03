@@ -3,6 +3,7 @@
 require "database_cleaner"
 
 require_dependency "stockpot/application_controller"
+require_relative "../../../lib/stockpot/errors"
 
 module Stockpot
   class DatabaseCleanerController < ApplicationController
@@ -12,6 +13,8 @@ module Stockpot
       clear_cache
       clean_active_record
       render json: { status: 204 }
+    rescue StandardError => exception
+      render Errors.rescue_error(exception)
     end
 
     private

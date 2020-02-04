@@ -33,7 +33,7 @@ module Stockpot
       list = params[:list] || 1
       list.times do |n|
         all_parameters = [ factory, *traits, attributes(n) ].compact
-        FactoryBot.create!(*all_parameters)
+        FactoryBot.create(*all_parameters)
       end
       obj = factory.to_s.camelize.constantize.last(list)
 

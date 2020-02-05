@@ -11,7 +11,7 @@ module Errors
     when PG::Error
       return return_error("Postgres error: #{error}", :server_error)
     when ActiveRecord::RecordInvalid, ActiveRecord::ValidationError
-      return return_error("ActiveRecord error: #{error}", :server_error)
+      return return_error("ActiveRecord error: #{error.to_s}", :server_error)
     else
       return return_error(error.to_s, :server_error)
     end

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 require "factory_bot_rails"
 
+## Using the factory.class.name is more reliable than using model names,
+# specially when factory name and model names are different or are namespaced.
+# It is a little hacky but until we find a better solution this is it.
+
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
@@ -29,10 +33,10 @@ module Stockpot
       ActiveRecord::Base.transaction do
         list.times do |n|
           all_parameters = [ factory, *traits, attributes(n) ].compact
-          FactoryBot.create(*all_parameters)
+          @factory = FactoryBot.create(*all_parameters)
         end
       end
-      obj = factory.to_s.camelize.constantize.last(list)
+      obj = @factory.class.name.constantize.last(list)
 
       render json: obj, status: :created
     end
@@ -42,7 +46,8 @@ module Stockpot
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model].to_s
-          obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model)).destroy_all
+          class_name = FactoryBot.build(model).class.name
+          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model)).destroy_all
         end
       end
 
@@ -54,8 +59,9 @@ module Stockpot
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model].to_s
+          class_name = FactoryBot.build(model).class.name
           update_params = params.permit![:models][i][:update].to_h
-          obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model, :update)).update(update_params)
+          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model, :update)).update(update_params)
         end
       end
       render json: obj, status: :accepted

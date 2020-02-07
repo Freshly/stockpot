@@ -70,7 +70,7 @@ module Stockpot
     private
 
     def find_correct_class_name(model)
-      FactoryBot.factories.registered?(model) ? FactoryBot.build(model).class.name : model.camelize
+      FactoryBot.factories.registered?(model) ? FactoryBot.factories.find(model).name.to_s.camelize : model.camelize
     end
 
     def traits

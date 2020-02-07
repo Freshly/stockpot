@@ -46,7 +46,7 @@ module Stockpot
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model].to_s
-          class_name = FactoryBot.build(model).class.name
+          class_name = find_correct_class_name(model)
           obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model)).destroy_all
         end
       end
@@ -59,7 +59,7 @@ module Stockpot
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model].to_s
-          class_name = FactoryBot.build(model).class.name
+          class_name = find_correct_class_name(model)
           update_params = params.permit![:models][i][:update].to_h
           obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model, :update)).update(update_params)
         end
@@ -68,6 +68,10 @@ module Stockpot
     end
 
     private
+
+    def find_correct_class_name(model)
+      FactoryBot.factories.registered?(model) ? FactoryBot.build(model).class.name : model.camelize
+    end
 
     def traits
       return if params[:traits].blank?

@@ -17,8 +17,9 @@ module Stockpot
       obj = {}
       models.each_with_index do |element, i|
         model = element[:model].to_s
+        class_name = find_correct_class_name(model)
 
-        obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model))
+        obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model))
       end
 
       render json: obj, status: :ok

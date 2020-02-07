@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 require "factory_bot_rails"
 
-## Using the factory.class.name is more reliable than using model names,
-# specially when factory name and model names are different or are namespaced.
-# It is a little hacky but until we find a better solution this is it.
-
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
@@ -70,7 +66,10 @@ module Stockpot
     private
 
     def find_correct_class_name(model)
-      FactoryBot.factories.registered?(model) ? FactoryBot.factories.find(model).name.to_s.camelize : model.camelize
+      # We are getting the class name from the factory or we default to whatever we send in.
+      # Something to keep in mind "module/class_name".camelize will translate into "Module::ClassName"
+      # which is perfect for namespaces in case there is no factory associated with a specific model
+      FactoryBot.factories.registered?(model) ? FactoryBot.build_stubbed(model).class.name : model.camelize
     end
 
     def traits

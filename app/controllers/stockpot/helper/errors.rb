@@ -12,7 +12,7 @@ module Stockpot
         when PG::Error
           return_error("Postgres error: #{error}", error.backtrace.first(5), :server_error)
         when ActiveRecord::RecordInvalid, ActiveRecord::Validations
-          return_error("ActiveRecord error: ActiveRecord error: #{error}", error.backtrace.first(5), :server_error)
+          return_error("ActiveRecord error: #{error}", error.backtrace.first(5), :server_error)
         else
           return_error(error.to_s, error.backtrace.first(5),:server_error)
         end

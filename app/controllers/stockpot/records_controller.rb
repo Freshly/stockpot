@@ -1,16 +1,15 @@
 # frozen_string_literal: true
-
-require_dependency "stockpot/application_controller"
-
 require "factory_bot_rails"
 
 module Stockpot
   class RecordsController < ApplicationController
     include ActiveSupport::Inflector
-    before_action only: [:index, :destroy, :update] do
+    include ActiveRecord::Transactions
+
+    before_action only: %i[index destroy update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
-    before_action only: [:create] do
+    before_action only: %i[create] do
       return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
     end
 
@@ -18,7 +17,9 @@ module Stockpot
       obj = {}
       models.each_with_index do |element, i|
         model = element[:model].to_s
-        obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model))
+        class_name = find_correct_class_name(model)
+
+        obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model))
       end
 
       render json: obj, status: :ok
@@ -26,19 +27,25 @@ module Stockpot
 
     def create
       list = params[:list] || 1
-      list.times do |n|
-        all_parameters = [factory, *traits, attributes(n)].compact
-        FactoryBot.create(*all_parameters)
+      ActiveRecord::Base.transaction do
+        list.times do |n|
+          all_parameters = [ factory, *traits, attributes(n) ].compact
+          @factory = FactoryBot.create(*all_parameters)
+        end
       end
-      obj = factory.to_s.camelize.constantize.last(list)
+      obj = @factory.class.name.constantize.last(list)
+
       render json: obj, status: :created
     end
 
     def destroy
       obj = {}
-      models.each_with_index do |element, i|
-        model = element[:model].to_s
-        obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model)).destroy_all
+      ActiveRecord::Base.transaction do
+        models.each_with_index do |element, i|
+          model = element[:model].to_s
+          class_name = find_correct_class_name(model)
+          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model)).destroy_all
+        end
       end
 
       render json: obj, status: :accepted
@@ -46,23 +53,29 @@ module Stockpot
 
     def update
       obj = {}
-      models.each_with_index do |element, i|
-        model = element[:model].to_s
-        update_params = params.permit![:models][i][:update].to_h
-        obj[pluralize(model).camelize(:lower)] = model.camelize.constantize.where(models[i].except(:model, :update)).update(update_params)
+      ActiveRecord::Base.transaction do
+        models.each_with_index do |element, i|
+          model = element[:model].to_s
+          class_name = find_correct_class_name(model)
+          update_params = params.permit![:models][i][:update].to_h
+          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model, :update)).update(update_params)
+        end
       end
-
       render json: obj, status: :accepted
     end
 
     private
 
-    def return_error(message, status)
-      render json: { "error": { "status": status, "message": message }}, status: status
+    def find_correct_class_name(model)
+      # We are getting the class name from the factory or we default to whatever we send in.
+      # Something to keep in mind "module/class_name".camelize will translate into "Module::ClassName"
+      # which is perfect for namespaces in case there is no factory associated with a specific model
+      FactoryBot.factories.registered?(model) ? FactoryBot.build_stubbed(model).class.name : model.camelize
     end
 
     def traits
-      return unless params[:traits].present?
+      return if params[:traits].blank?
+
       params[:traits].map(&:to_sym)
     end
 
@@ -70,8 +83,11 @@ module Stockpot
       params[:factory].to_sym
     end
 
+    # rubocop:disable Naming/UncommunicativeMethodParamName
     def attributes(n)
-      return unless params[:attributes].present?
+      # rubocop:enable Naming/UncommunicativeMethodParamName
+      return if params[:attributes].blank?
+
       params.permit![:attributes][n].to_h
     end
 

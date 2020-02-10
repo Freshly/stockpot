@@ -2,6 +2,4 @@
 
 require "stockpot/engine"
 
-module Stockpot
-  # Your code goes here...
-end
+module Stockpot; end

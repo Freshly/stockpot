@@ -30,10 +30,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "timecop", "~> 0.8"
 
   spec.add_development_dependency "pry-byebug", "~> 3.7"
-  spec.add_development_dependency "rake", "~> 12.3", ">= 12.3.3"
-  spec.add_development_dependency "rspec", "~> 3.8"
-  spec.add_development_dependency "rspec-rails", "~> 3.8", ">= 3.8.2"
-  spec.add_development_dependency "spicerack-styleguide", ">= 0.16.2", "< 1.0"
+  spec.add_development_dependency "rake", '~> 13.0', '>= 13.0.1'
+  spec.add_development_dependency "rspec", '~> 3.9'
+  spec.add_development_dependency "rspec-rails", '~> 3.9'
+  spec.add_development_dependency "spicerack-styleguide", ">= 0.21.0", "< 1.0"
   spec.add_development_dependency "shoulda-matchers", "~> 4.1", ">= 4.1.2"
   spec.add_development_dependency "simplecov", "~> 0.17.1"
 end

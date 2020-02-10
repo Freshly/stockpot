@@ -2,8 +2,6 @@
 
 require "database_cleaner"
 
-require_dependency "stockpot/application_controller"
-
 module Stockpot
   class DatabaseCleanerController < ApplicationController
     # Clean database before, between, and after tests by clearing Rails

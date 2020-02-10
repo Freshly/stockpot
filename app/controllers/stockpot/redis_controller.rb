@@ -1,7 +1,6 @@
 # frozen_string_literal: true
-
 module Stockpot
-  class RedisController < ActionController::Base
+  class RedisController < ApplicationController
     def index
       if params[:field].present?
         # Returns the value associated with :field in the hash stored at :key

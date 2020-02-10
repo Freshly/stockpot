@@ -6,15 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
+### Added
 - Add return errors to a before action to dry up code in the records_controller. ([#9](https://github.com/Freshly/stockpot/pull/9/) [victorFSL])
+- Add capability to query factories that have a different name than the model([#10](https://github.com/Freshly/stockpot/pull/10) [victorFSL]
+- Backtrace errors is now sent back with the error message, for better debugging experience. (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
+
+### Changed
 - Improve format of create action in the records_controller to increase readability. ([#9](https://github.com/Freshly/stockpot/pull/9) [victorFSL])
 - Add in some initial error handling because everything is not okay. ([#10](https://github.com/Freshly/stockpot/pull/10) [jaysonesmith]
-- Add capability to query factories that have a different name than the model([#10](https://github.com/Freshly/stockpot/pull/10) [victorFSL]
 - Update and destroy action now have the capability to use namespacing ie. 'module/class' -> 'Module::Class' (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
 - Transaction capabilities, to rollback if an error happens. (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
-- Backtrace errors is now sent back with the error message, for better debugging experience. (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
 
 ### Security
 

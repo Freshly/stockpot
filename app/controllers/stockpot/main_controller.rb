@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Stockpot
-  class ApplicationController < ActionController::API
+  class MainController < ActionController::API
     include ActiveSupport::Rescuable
     include Helper::Errors
 

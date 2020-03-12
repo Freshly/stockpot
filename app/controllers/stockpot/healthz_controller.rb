@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Stockpot
-  class HealthzController < ApplicationController
+  class HealthzController < MainController
     def index
       render json: { "message": "success" }, status: :ok
     end

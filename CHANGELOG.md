@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+- Upgrade a few gems ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
 
 ##[v0.3]
 

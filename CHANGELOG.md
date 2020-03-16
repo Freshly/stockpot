@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+
+##[v0.3]
+
 ### Added
 - Add return errors to a before action to dry up code in the records_controller. ([#9](https://github.com/Freshly/stockpot/pull/9/) [victorFSL])
 - Add capability to query factories that have a different name than the model([#10](https://github.com/Freshly/stockpot/pull/10) [victorFSL]

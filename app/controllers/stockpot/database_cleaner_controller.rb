@@ -3,7 +3,7 @@
 require "database_cleaner"
 
 module Stockpot
-  class DatabaseCleanerController < ApplicationController
+  class DatabaseCleanerController < MainController
     # Clean database before, between, and after tests by clearing Rails
     # and REDIS caches and truncating the active record database.
     def index

@@ -2,7 +2,7 @@
 require "factory_bot_rails"
 
 module Stockpot
-  class RecordsController < ApplicationController
+  class RecordsController < MainController
     include ActiveSupport::Inflector
     include ActiveRecord::Transactions
 

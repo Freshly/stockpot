@@ -6,15 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
-- Upgrade a few gems ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+## [v0.3.2] - 2020-04-09
 
-##[v0.3]
+### Changed
+- Updated CHANGELOG and stockpot version
+
+## [v0.3.1] - 2020-04-08
 
 ### Added
 - Add return errors to a before action to dry up code in the records_controller. ([#9](https://github.com/Freshly/stockpot/pull/9/) [victorFSL])
 - Add capability to query factories that have a different name than the model([#10](https://github.com/Freshly/stockpot/pull/10) [victorFSL]
 - Backtrace errors is now sent back with the error message, for better debugging experience. (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
+
+### Fixed
+- Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
 
 ### Changed
 - Improve format of create action in the records_controller to increase readability. ([#9](https://github.com/Freshly/stockpot/pull/9) [victorFSL])
@@ -23,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Transaction capabilities, to rollback if an error happens. (https://github.com/Freshly/stockpot/pull/10) [victorFSL]
 
 ### Security
-
+- Upgrade a few gems ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
 - Updated gemfile.lock for security purposes. ([#7](https://github.com/Freshly/stockpot/pull/4) [jaysonesmith])
 
 ## [v0.2.1] - 2019-11-4

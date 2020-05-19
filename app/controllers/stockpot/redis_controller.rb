@@ -26,7 +26,7 @@ module Stockpot
     end
 
     def keys
-      record = REDIS.keys()
+      record = REDIS.keys
 
       render json: record.to_json, status: :ok
     end

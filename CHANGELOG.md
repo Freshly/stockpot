@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add support for querying all keys stored in redis. ([#16](https://github.com/Freshly/stockpot/pull/16) [brianharman])
 - Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
 - Upgrade a few gems ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
 
@@ -106,6 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.1]: https://github.com/Freshly/stockpot/releases/tag/v0.1.1
 
 <!-- Contributors -->
+[brianharman]: httpe://githuhb.com/brianharman
 [corbettbw]: https://github.com/corbettbw
 [jaysonesmith]: https://github.com/jaysonesmith
 [victorFSL]: https://github.com/victorFSL

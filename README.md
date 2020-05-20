@@ -139,6 +139,10 @@ Query for data. Accepts key or field to use to search cache for record.
 }
 ```
 
+#### GET - Keys
+  
+Query for all keys within data. No body or argument required.
+
 #### POST - Create new data
 
 Accepts an object specifying a key, field, and value to be inserted into Redis cache.

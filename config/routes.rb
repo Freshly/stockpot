@@ -8,8 +8,9 @@ Stockpot::Engine.routes.draw do
 
   delete "/clean_database", to: "database_cleaner#index"
 
-  get "/redis", to: "redis#index"
   post "/redis", to: "redis#create"
+  get "/redis", to: "redis#index"
+  get "/redis/keys", to: "redis#keys"
 
   get "/healthz", to: "healthz#index"
 end

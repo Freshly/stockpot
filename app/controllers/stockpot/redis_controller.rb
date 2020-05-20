@@ -24,5 +24,11 @@ module Stockpot
 
       render json: { status: 201 }
     end
+
+    def keys
+      record = REDIS.keys
+
+      render json: record.to_json, status: :ok
+    end
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "factory_bot_rails"
+require "active_record/persistence"
 
 module Stockpot
   class RecordsController < MainController
@@ -16,7 +17,7 @@ module Stockpot
     def index
       obj = {}
       models.each_with_index do |element, i|
-        model = element[:model].to_s
+        model = element[:model]
         class_name = find_correct_class_name(model)
 
         obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model))
@@ -27,13 +28,15 @@ module Stockpot
 
     def create
       list = params[:list] || 1
+      ids = []
       ActiveRecord::Base.transaction do
         list.times do |n|
           all_parameters = [ factory, *traits, attributes(n) ].compact
           @factory = FactoryBot.create(*all_parameters)
+          ids << @factory.id
         end
       end
-      obj = @factory.class.name.constantize.last(list)
+      obj = @factory.class.name.constantize.find(ids)
 
       render json: obj, status: :created
     end
@@ -42,9 +45,13 @@ module Stockpot
       obj = {}
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
-          model = element[:model].to_s
+          model = element[:model]
           class_name = find_correct_class_name(model)
-          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model)).destroy_all
+          obj[pluralize(model).camelize(:lower)] = []
+
+          class_name.constantize.where(models[i].except(:model)).each do |record|
+            obj[pluralize(model).camelize(:lower)] << record.destroy!
+          end
         end
       end
 
@@ -58,7 +65,12 @@ module Stockpot
           model = element[:model].to_s
           class_name = find_correct_class_name(model)
           update_params = params.permit![:models][i][:update].to_h
-          obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model, :update)).update(update_params)
+          attributes_to_search = models[i].except(:model, :update)
+          obj[pluralize(model).camelize(:lower)] = []
+
+          class_name.constantize.where(attributes_to_search).each do |record|
+            obj[pluralize(model).camelize(:lower)] << record.update!(update_params)
+          end
         end
       end
       render json: obj, status: :accepted

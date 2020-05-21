@@ -36,7 +36,7 @@ module Stockpot
           ids << @factory.id
         end
       end
-      obj = @factory.class.name.constantize.find(ids)
+      obj = @factory.class.name.constantize.where(id: ids)
 
       render json: obj, status: :created
     end
@@ -50,7 +50,7 @@ module Stockpot
           obj[pluralize(model).camelize(:lower)] = []
 
           class_name.constantize.where(models[i].except(:model)).each do |record|
-            obj[pluralize(model).camelize(:lower)] << record.destroy!
+            obj[pluralize(model).camelize(:lower)] << record if record.destroy!
           end
         end
       end
@@ -69,7 +69,8 @@ module Stockpot
           obj[pluralize(model).camelize(:lower)] = []
 
           class_name.constantize.where(attributes_to_search).each do |record|
-            obj[pluralize(model).camelize(:lower)] << record.update!(update_params)
+            record.update!(update_params)
+            obj[pluralize(model).camelize(:lower)] << class_name.constantize.find(record.id)
           end
         end
       end

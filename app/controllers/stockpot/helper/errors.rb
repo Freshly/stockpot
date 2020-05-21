@@ -8,13 +8,13 @@ module Stockpot
 
         case error
         when NameError
-          return_error(error.to_s, error.backtrace.first(5), :bad_request)
+          return_error(error.message, error.backtrace.first(5), :bad_request)
         when PG::Error
-          return_error("Postgres error: #{error}", error.backtrace.first(5), :internal_server_error)
+          return_error("Postgres error: #{error.message}", error.backtrace.first(5), :internal_server_error)
         when ActiveRecord::RecordInvalid, ActiveRecord::Validations, ActiveRecord::RecordNotDestroyed
-          return_error("ActiveRecord error: #{error}", error.backtrace.first(5), :expectation_failed)
+          return_error("In #{error.record.class} class, #{error.message}", error.backtrace.first(5), :expectation_failed)
         else
-          return_error(error.to_s, error.backtrace.first(5),:internal_server_error)
+          return_error(error.message, error.backtrace.first(5),:internal_server_error)
         end
       end
 

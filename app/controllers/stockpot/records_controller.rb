@@ -11,10 +11,10 @@ module Stockpot
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?
     end
     before_action only: %i[create] do
-      return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
+      return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factories).blank?
     end
     before_action do
-      @obj = {}
+      @response_data = {}
     end
 
     def index
@@ -23,30 +23,35 @@ module Stockpot
         class_name = find_correct_class_name(model)
         formatted_model = pluralize(model).camelize(:lower).gsub("::","")
 
-        if @obj.has_key?(formatted_model)
-          @obj[formatted_model].concat(class_name.constantize.where(models[i].except(:model)).to_a)
-        else
-          @obj[formatted_model] = class_name.constantize.where(models[i].except(:model)).to_a
-        end  
+        @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+        @response_data[formatted_model].concat(class_name.constantize.where(models[i].except(:model)))
+        @response_data[formatted_model].reverse!.uniq!{ |obj| obj["id"] }
       end
-
-      render json: @obj, status: :ok
+      render json: @response_data, status: :ok
     end
 
     def create
-      list = params[:list] || 1
-      ids = []
       ActiveRecord::Base.transaction do
-        list.times do |n|
-          all_parameters = [ factory, *traits, attributes(n) ].compact
-          
-          @factory = FactoryBot.create(*all_parameters)
-          ids << @factory.id
+        factories.each_with_index do |element, i|
+          ids = []
+          list = element[:list] || 1
+          factory = element[:factory]
+          traits = element[:traits].map(&:to_sym) unless element[:traits].blank?
+          attributes = element[:attributes].to_h unless element[:attributes].blank?
+
+          list.times do |n|
+            factory_arguments = [ factory, *traits, attributes ].compact
+            @factory_instance = FactoryBot.create(*factory_arguments)
+            ids << @factory_instance.id
+          end
+
+          factory_name = pluralize(factory).camelize(:lower)
+
+          @response_data[factory_name] = [] unless @response_data.has_key?(factory_name)
+          @response_data[factory_name].concat(@factory_instance.class.name.constantize.where(id: ids))
         end
       end
-      @obj = @factory.class.name.constantize.where(id: ids)
-
-      render json: @obj, status: :created
+      render json: @response_data, status: :accepted
     end
 
     def destroy
@@ -58,13 +63,12 @@ module Stockpot
 
           class_name.constantize.where(models[i].except(:model)).each do |record|
             record.destroy!
-            @obj[formatted_model] = [] unless @obj.has_key?(formatted_model)
-            @obj[formatted_model] << record
+            @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+            @response_data[formatted_model] << record
           end
         end
       end
-
-      render json: @obj, status: :accepted
+      render json: @response_data, status: :accepted
     end
 
     def update
@@ -78,12 +82,13 @@ module Stockpot
 
           class_name.constantize.where(attributes_to_search).each do |record|
             record.update!(update_params)
-            @obj[formatted_model] = [] unless @obj.has_key?(formatted_model)
-            @obj[formatted_model] << class_name.constantize.find(record.id)
+            @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+            @response_data[formatted_model] << class_name.constantize.find(record.id)
+            @response_data[formatted_model].reverse!.uniq!{ |obj| obj["id"] }
           end
         end
       end
-      render json: @obj, status: :accepted
+      render json: @response_data, status: :accepted
     end
 
     private
@@ -96,29 +101,15 @@ module Stockpot
         FactoryBot.factories.find(model).build_class.to_s
       else
         model.camelize
-      end  
-    end
-
-    def traits
-      return if params[:traits].blank?
-
-      params[:traits].map(&:to_sym)
-    end
-
-    def factory
-      params[:factory].to_sym
-    end
-
-    # rubocop:disable Naming/UncommunicativeMethodParamName
-    def attributes(n)
-      # rubocop:enable Naming/UncommunicativeMethodParamName
-      return if params[:attributes].blank?
-
-      params.permit![:attributes][n].to_h
+      end
     end
 
     def models
       params.permit![:models].map(&:to_h)
+    end
+
+    def factories
+      params.permit![:factories].map(&:to_h)
     end
   end
 end

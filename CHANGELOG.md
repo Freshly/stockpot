@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## Added
-
-- Records controller now allow for multiple calls to the same model, effectively returning the correct data.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]
-- Better error handling, that specifies the model and property that did not pass validation. .([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]
+- createRecords action now allows creation of multiple records.([#18] (github.com/Freshly/stockpot/pull/18/) [dapperDerek])
+- Records controller now allow for multiple calls to the same model, effectively returning the correct data.([#18](github.com/Freshly/stockpot/pull/18/) [dapperDerek])
+- Better error handling, that specifies the model and property that did not pass validation. .([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
 - Add support for querying all keys stored in redis. ([#16](https://github.com/Freshly/stockpot/pull/16) [brianharman])
 
 ## Fixed
 
-- Validation is now triggering correctly and rolling back any changes within the call.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL] 
+- Validation is now triggering correctly and rolling back any changes within the call.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]
 - The create#records now returns based on Ids instead of relying on a specific record order. .([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]
 - No more stubbing FactoryBot, there is a method that exposes the class name [#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]]
 

@@ -70,7 +70,7 @@ module Stockpot
     def update
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
-          model = element[:model].to_s
+          model = element[:model]
           class_name = find_correct_class_name(model)
           update_params = params.permit![:models][i][:update].to_h
           attributes_to_search = models[i].except(:model, :update)

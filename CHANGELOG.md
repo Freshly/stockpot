@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Validation is now triggering correctly and rolling back any changes within the call.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL] 
 - The create#records now returns based on Ids instead of relying on a specific record order. .([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]
+- No more stubbing FactoryBot, there is a method that exposes the class name [#18](github.com/Freshly/stockpot/pull/18/) [victorFSL]]
 
 ##[v0.3.1]
 

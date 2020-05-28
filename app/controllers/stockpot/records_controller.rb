@@ -21,7 +21,8 @@ module Stockpot
       models.each_with_index do |element, i|
         model = element[:model]
         class_name = find_correct_class_name(model)
-        formatted_model = pluralize(model).camelize(:lower)
+        formatted_model = pluralize(model).camelize(:lower).gsub("::","")
+
         if @obj.has_key?(formatted_model)
           @obj[formatted_model].concat(class_name.constantize.where(models[i].except(:model)).to_a)
         else
@@ -53,10 +54,10 @@ module Stockpot
         models.each_with_index do |element, i|
           model = element[:model]
           class_name = find_correct_class_name(model)
-          formatted_model = pluralize(model).camelize(:lower)
+          formatted_model = pluralize(model).camelize(:lower).gsub("::","")
 
           class_name.constantize.where(models[i].except(:model)).each do |record|
-            record.destroy
+            record.destroy!
             @obj[formatted_model] = [] unless @obj.has_key?(formatted_model)
             @obj[formatted_model] << record
           end
@@ -67,22 +68,22 @@ module Stockpot
     end
 
     def update
-      obj = {}
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model].to_s
           class_name = find_correct_class_name(model)
           update_params = params.permit![:models][i][:update].to_h
           attributes_to_search = models[i].except(:model, :update)
-          obj[pluralize(model).camelize(:lower)] = []
+          formatted_model = pluralize(model).camelize(:lower).gsub("::", "")
 
           class_name.constantize.where(attributes_to_search).each do |record|
             record.update!(update_params)
-            obj[pluralize(model).camelize(:lower)] << class_name.constantize.find(record.id)
+            @obj[formatted_model] = [] unless @obj.has_key?(formatted_model)
+            @obj[formatted_model] << class_name.constantize.find(record.id)
           end
         end
       end
-      render json: obj, status: :accepted
+      render json: @obj, status: :accepted
     end
 
     private
@@ -91,7 +92,11 @@ module Stockpot
       # We are getting the class name from the factory or we default to whatever we send in.
       # Something to keep in mind "module/class_name".camelize will translate into "Module::ClassName"
       # which is perfect for namespaces in case there is no factory associated with a specific model
-      FactoryBot.factories.registered?(model) ? FactoryBot.build_stubbed(model).class.name : model.camelize
+      if FactoryBot.factories.registered?(model)
+        FactoryBot.factories.find(model).build_class.to_s
+      else
+        model.camelize
+      end  
     end
 
     def traits

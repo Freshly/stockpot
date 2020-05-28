@@ -13,17 +13,23 @@ module Stockpot
     before_action only: %i[create] do
       return_error("You need to provide at least one factory name as an argument", 400) if params.dig(:factory).blank?
     end
+    before_action do
+      @obj = {}
+    end
 
     def index
-      obj = {}
       models.each_with_index do |element, i|
         model = element[:model]
         class_name = find_correct_class_name(model)
-
-        obj[pluralize(model).camelize(:lower)] = class_name.constantize.where(models[i].except(:model))
+        formatted_model = pluralize(model).camelize(:lower)
+        if @obj.has_key?(formatted_model)
+          @obj[formatted_model].concat(class_name.constantize.where(models[i].except(:model)).to_a)
+        else
+          @obj[formatted_model] = class_name.constantize.where(models[i].except(:model)).to_a
+        end  
       end
 
-      render json: obj, status: :ok
+      render json: @obj, status: :ok
     end
 
     def create
@@ -32,30 +38,32 @@ module Stockpot
       ActiveRecord::Base.transaction do
         list.times do |n|
           all_parameters = [ factory, *traits, attributes(n) ].compact
+          
           @factory = FactoryBot.create(*all_parameters)
           ids << @factory.id
         end
       end
-      obj = @factory.class.name.constantize.where(id: ids)
+      @obj = @factory.class.name.constantize.where(id: ids)
 
-      render json: obj, status: :created
+      render json: @obj, status: :created
     end
 
     def destroy
-      obj = {}
       ActiveRecord::Base.transaction do
         models.each_with_index do |element, i|
           model = element[:model]
           class_name = find_correct_class_name(model)
-          obj[pluralize(model).camelize(:lower)] = []
+          formatted_model = pluralize(model).camelize(:lower)
 
           class_name.constantize.where(models[i].except(:model)).each do |record|
-            obj[pluralize(model).camelize(:lower)] << record if record.destroy!
+            record.destroy
+            @obj[formatted_model] = [] unless @obj.has_key?(formatted_model)
+            @obj[formatted_model] << record
           end
         end
       end
 
-      render json: obj, status: :accepted
+      render json: @obj, status: :accepted
     end
 
     def update

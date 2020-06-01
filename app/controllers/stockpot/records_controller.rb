@@ -21,25 +21,25 @@ module Stockpot
       models.each_with_index do |element, i|
         model = element[:model]
         class_name = find_correct_class_name(model)
-        formatted_model = pluralize(model).camelize(:lower).gsub("::","")
+        formatted_model = pluralize(model).camelize(:lower).gsub("::", "")
 
-        @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+        @response_data[formatted_model] = [] unless @response_data.key?(formatted_model)
         @response_data[formatted_model].concat(class_name.constantize.where(models[i].except(:model)))
-        @response_data[formatted_model].reverse!.uniq!{ |obj| obj["id"] }
+        @response_data[formatted_model].reverse!.uniq! { |obj| obj["id"] }
       end
       render json: @response_data, status: :ok
     end
 
     def create
       ActiveRecord::Base.transaction do
-        factories.each_with_index do |element, i|
+        factories.each do |element|
           ids = []
           list = element[:list] || 1
           factory = element[:factory]
-          traits = element[:traits].map(&:to_sym) unless element[:traits].blank?
-          attributes = element[:attributes].to_h unless element[:attributes].blank?
+          traits = element[:traits].map(&:to_sym) if element[:traits].present?
+          attributes = element[:attributes].to_h if element[:attributes].present?
 
-          list.times do |n|
+          list.times do
             factory_arguments = [ factory, *traits, attributes ].compact
             @factory_instance = FactoryBot.create(*factory_arguments)
             ids << @factory_instance.id
@@ -47,7 +47,7 @@ module Stockpot
 
           factory_name = pluralize(factory).camelize(:lower)
 
-          @response_data[factory_name] = [] unless @response_data.has_key?(factory_name)
+          @response_data[factory_name] = [] unless @response_data.key?(factory_name)
           @response_data[factory_name].concat(@factory_instance.class.name.constantize.where(id: ids))
         end
       end
@@ -59,11 +59,11 @@ module Stockpot
         models.each_with_index do |element, i|
           model = element[:model]
           class_name = find_correct_class_name(model)
-          formatted_model = pluralize(model).camelize(:lower).gsub("::","")
+          formatted_model = pluralize(model).camelize(:lower).gsub("::", "")
 
           class_name.constantize.where(models[i].except(:model)).each do |record|
             record.destroy!
-            @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+            @response_data[formatted_model] = [] unless @response_data.key?(formatted_model)
             @response_data[formatted_model] << record
           end
         end
@@ -82,9 +82,9 @@ module Stockpot
 
           class_name.constantize.where(attributes_to_search).each do |record|
             record.update!(update_params)
-            @response_data[formatted_model] = [] unless @response_data.has_key?(formatted_model)
+            @response_data[formatted_model] = [] unless @response_data.key?(formatted_model)
             @response_data[formatted_model] << class_name.constantize.find(record.id)
-            @response_data[formatted_model].reverse!.uniq!{ |obj| obj["id"] }
+            @response_data[formatted_model].reverse!.uniq! { |obj| obj["id"] }
           end
         end
       end

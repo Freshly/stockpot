@@ -79,7 +79,7 @@ Query for data. Accepts a array of objects that require at least a model name, b
 
 #### POST
 
-Create new data. Accepts an object specifying a single model with additional qualifiers.
+Create new data. Accepts an an array of objects specifying a single model with additional qualifiers.
 
 * factory (required) - Specify which factory to create a record with.
 * list (optional) - Specify a count of items to create, default: 1

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [v.0.4.0] - 2020-06-01
+
 ## Added
 - createRecords action now allows creation of multiple records.([#18](github.com/Freshly/stockpot/pull/18/) [dapperDerek])
 - Records controller now allow for multiple calls to the same model, effectively returning the correct data.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])

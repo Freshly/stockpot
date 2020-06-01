@@ -87,7 +87,7 @@ Create new data. Accepts an object specifying a single model with additional qua
 * attributes (optional) - An array of objects allowing for the specification of data to be used when creating records. Array position matches with list order if multiple records are desired.
 
 ```javascript
-{
+[{
   factory: "user",
   traits: ["having_address"],
   attributes: [{
@@ -96,7 +96,7 @@ Create new data. Accepts an object specifying a single model with additional qua
     first_name: "Foo",
     last_name: "Bar"
   }]
-}
+}]
 ```
 
 #### DELETE
@@ -129,7 +129,7 @@ Clears Rails & Redis caches and truncates Active Records databases. No body requ
 ### `/stockpot/redis`
 
 #### GET
-  
+
 Query for data. Accepts key or field to use to search cache for record.
 
 ```javascript
@@ -140,7 +140,7 @@ Query for data. Accepts key or field to use to search cache for record.
 ```
 
 #### GET - Keys
-  
+
 Query for all keys within data. No body or argument required.
 
 #### POST - Create new data
@@ -172,7 +172,7 @@ Cypress.Commands.add("getRecords", args => {
 ```
 
 Our tests can then call this command like this
-  
+
 ```javascript
 cy.getRecords([{ model: "user", id: user.id }])
   .then(res => {

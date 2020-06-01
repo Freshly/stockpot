@@ -6,11 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Add support for querying all keys stored in redis. ([#16](https://github.com/Freshly/stockpot/pull/16) [brianharman])
-- Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that -. ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
-- Upgrade a few gems ([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+## Added
+- createRecords action now allows creation of multiple records.([#18](github.com/Freshly/stockpot/pull/18/) [dapperDerek])
+- Records controller now allow for multiple calls to the same model, effectively returning the correct data.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
+- Better error handling, that specifies the model and property that did not pass validation.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
+- Add support for querying all keys stored in redis.([#16](https://github.com/Freshly/stockpot/pull/16) [brianharman])
 
-##[v0.3]
+## Fixed
+
+- Validation is now triggering correctly and rolling back any changes within the call.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
+- The create#records now returns based on Ids instead of relying on a specific record order.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
+- No more stubbing FactoryBot, there is a method that exposes the class name.([#18](github.com/Freshly/stockpot/pull/18/) [victorFSL])
+
+## [v0.3.1] - 2020-04-06
+
+### Added
+- Fixes the endpoint not working on CI. This is not triggered locally - still puzzled as to the reason for that.([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+- Upgrade a few gems.([#13](https://github.com/Freshly/stockpot/pull/13) [victorFSL])
+
+## [v0.3.0] - 2020-02-10
 
 ### Added
 - Add return errors to a before action to dry up code in the records_controller. ([#9](https://github.com/Freshly/stockpot/pull/9/) [victorFSL])
@@ -107,7 +121,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.1]: https://github.com/Freshly/stockpot/releases/tag/v0.1.1
 
 <!-- Contributors -->
-[brianharman]: httpe://githuhb.com/brianharman
+[brianharman]: https://githuhb.com/brianharman
 [corbettbw]: https://github.com/corbettbw
+[dapperDerek]: https://github.com/dapperDerek
 [jaysonesmith]: https://github.com/jaysonesmith
 [victorFSL]: https://github.com/victorFSL

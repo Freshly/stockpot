@@ -20,7 +20,7 @@ The project's repo will look _similar_ to a Rails app, though very pared down. T
 
 ## Releases
 
-When changes on Master need to be released, the following steps should be followed, assuming you have release priveledges.
+When changes on Master need to be released, the following steps should be followed, assuming you have release privileges.
 
 - Update the version number in [version.rb](./lib/stockpot/version.rb)
 - Run `bundle` so that the [Gemfile.lock](Gemfile.lock) gets updated.

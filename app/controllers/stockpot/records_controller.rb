@@ -37,9 +37,9 @@ module Stockpot
           list = element[:list] || 1
           factory = element[:factory]
           traits = element[:traits].map(&:to_sym) if element[:traits].present?
-          attributes = element[:attributes].to_h if element[:attributes].present?
 
           list.times do
+            attributes = element[:attributes][n].to_h if element[:attributes].present?
             factory_arguments = [ factory, *traits, attributes ].compact
             @factory_instance = FactoryBot.create(*factory_arguments)
             ids << @factory_instance.id

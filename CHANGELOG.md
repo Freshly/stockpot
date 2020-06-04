@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [v.0.4.2] - 2020-06-03
+
+## Fixed
+- ACTUALLY fixes CreateRecords controller not handling factory attributes correctly.
+
+
 ## [v.0.4.1] - 2020-06-03
 
 ## Fixed
-- Fixes CreateRecords controller not handling factory attributes correctly. ([#18](github.com/Freshly/stockpot/pull/18/) [dapperDerek])
+- Fixes CreateRecords controller not handling factory attributes correctly.
 
 
 ## [v.0.4.0] - 2020-06-01
@@ -119,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Note: Released from spicerack initially.
 
 <!-- Releases -->
-[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/Freshly/stockpot/compare/v0.4.2...HEAD
+[v0.4.2]: https://github.com/Freshly/stockpot/compare/v0.4.1...v0.4.2
 [v0.4.1]: https://github.com/Freshly/stockpot/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/Freshly/stockpot/compare/v0.3.1...v0.4.0
 [v0.3.1]: https://github.com/Freshly/stockpot/compare/v0.3.0...v0.3.1

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 require "factory_bot_rails"
-require "active_record/persistence"
+require "active_record/transactions"
 
 module Stockpot
   class RecordsController < MainController
     include ActiveSupport::Inflector
     include ActiveRecord::Transactions
+    include Helper::Errors
 
     before_action only: %i[index destroy update] do
       return_error("You need to provide at least one model name as an argument", 400) if params.dig(:models).blank?

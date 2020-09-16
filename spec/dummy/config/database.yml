@@ -1,0 +1,11 @@
+# Use this as an example for database.yml
+# Uncomment and set it to your local environment
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+test:
+  <<: *default
+  database: test_database

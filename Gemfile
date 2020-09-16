@@ -15,3 +15,20 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+
+group :test do
+  gem "rails", ">= 5.2.3"
+  gem "factory_bot_rails", "~> 5.1.0"
+  gem "redis", ">= 3.3.5"
+  gem "timecop", "~> 0.8"
+  gem "pg", "~>0.18.4"
+  gem "database_cleaner-active_record"
+  gem "database_cleaner-redis"
+  gem "pry-byebug", "~> 3.7"
+  gem "rake", '~> 13.0', '>= 13.0.1'
+  gem "rspec", '~> 3.9'
+  gem "rspec-rails", '~> 3.9'
+  gem "spicerack-styleguide", ">= 0.21.0", "< 1.0"
+  gem "shoulda-matchers", "~> 4.1", ">= 4.1.2"
+  gem "simplecov", "~> 0.17.1"
+end

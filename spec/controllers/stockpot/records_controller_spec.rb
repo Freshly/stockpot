@@ -182,7 +182,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
             update: { first_name: updated_first_name },
           }
         ]
-      }.to_json
+       }.to_json
 
       expect(User.last.first_name).to eql(user.first_name)
       put records_path, params: params, headers: json_headers
@@ -190,3 +190,19 @@ RSpec.describe Stockpot::RecordsController, type: :request do
     end
   end
 end
+
+## TODO
+# Add more testing, scenarios...
+# INDEX
+# Returns several records if more than one records meets the filter criteria
+# If the same record is requested more than once, only one is returned.
+# If the same model is requested more than once, a merge of records should occur, so user will not return twice in different objects.
+# If model has a namespace then the :: will be trimmed and finds the right model to query
+# CREATE
+# If the same model is requested more than once, a merge of records should occur, so user will not return twice in different objects.
+# DESTROY
+# Check rollbacks
+# Even if the delete is triggered on the same model twice only one array is returned.
+# Can delete several records
+# UPDATE
+# Same as destroy action

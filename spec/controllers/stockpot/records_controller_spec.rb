@@ -3,7 +3,6 @@
 require "rails_helper"
 
 RSpec.describe Stockpot::RecordsController, type: :request do
-  include Stockpot::Engine.routes.url_helpers
   let(:json_headers) { { "CONTENT_TYPE": "application/json" }}
   let(:user) { FactoryBot.create(:user) }
 
@@ -20,8 +19,6 @@ RSpec.describe Stockpot::RecordsController, type: :request do
     end
 
     it "calls a factory and return records" do
-      current_time = Time.local(2008, 9, 1, 12, 0, 0)
-      Timecop.freeze(current_time)
       first_name = "firstName1"
       last_name = "lastName1"
       params = {
@@ -36,13 +33,69 @@ RSpec.describe Stockpot::RecordsController, type: :request do
             ]
           }
         ]
-      }.to_json
+      }
 
-      post records_path, params: params, headers: json_headers
+      post records_path, params: params.to_json, headers: json_headers
       expect(response.status).to eql 202
       expect(User.last.first_name).to eql(first_name)
       expect(json_body["users"][0]["first_name"]).to eq(first_name)
       expect(json_body["users"][0]["last_name"]).to eq(last_name)
+    end
+    it "creates several records when the param list is passed in" do
+      first_name_1 = "firstName1"
+      last_name_1 = "lastName1"
+      first_name_2 = "firstName2"
+      last_name_2 = "lastName2"
+      params = {
+        factories: [
+          {
+            list: 2,
+            factory: "user",
+            attributes: [
+              {
+                first_name: first_name_1,
+                last_name: last_name_1,
+              },
+              {
+                first_name: first_name_2,
+                last_name: last_name_2,
+              },
+            ]
+          }
+        ]
+      }.to_json
+
+      post records_path, params: params, headers: json_headers
+      expect(response.status).to eql 202
+      expect(User.all.count).to eql(2)
+      expect(json_body["users"][0]["first_name"]).to eq(first_name_1)
+      expect(json_body["users"][0]["last_name"]).to eq(last_name_1)
+      expect(json_body["users"][1]["first_name"]).to eq(first_name_2)
+      expect(json_body["users"][1]["last_name"]).to eq(last_name_2)
+    end
+    it "rollsback transactions if something goes wrong" do
+      params = {
+        factories: [
+          {
+            list: 2,
+            factory: "user",
+            attributes: [
+              {
+                first_name: "first_name_1",
+                last_name: "last_name_1",
+              },
+              {
+                non_existent_property: "none",
+                last_name: "last_name_2",
+              },
+            ]
+          }
+        ]
+      }.to_json
+
+      post records_path, params: params, headers: json_headers
+      expect(response.status).to eql 400
+      expect(User.all.count).to eql(0)
     end
   end
 

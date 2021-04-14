@@ -23,4 +23,20 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   spec.require_paths = "lib"
 
+  spec.add_dependency "rails", ">= 5.2.3"
+  spec.add_dependency "factory_bot_rails", "~> 5.1.0"
+  spec.add_dependency "database_cleaner", "~> 1.6.2"
+  spec.add_dependency "redis", ">= 3.3.5"
+  spec.add_dependency "timecop", "~> 0.8"
+
+  spec.add_development_dependency "pry-byebug", "~> 3.7"
+  spec.add_development_dependency "rake", '~> 13.0', '>= 13.0.1'
+  spec.add_development_dependency "rspec", '~> 3.9'
+  spec.add_development_dependency "rspec-rails", '~> 3.9'
+  spec.add_development_dependency "spicerack-styleguide", ">= 0.21.0", "< 1.0"
+  spec.add_development_dependency "shoulda-matchers", "~> 4.1", ">= 4.1.2"
+  spec.add_development_dependency "simplecov", "~> 0.17.1"
+  spec.add_development_dependency "pg", "~> 0.18.4"
+  spec.add_development_dependency "database_cleaner-active_record"
+  spec.add_development_dependency "database_cleaner-redis"
 end

@@ -34,12 +34,12 @@ RSpec.describe Stockpot::RedisController, type: :request do
   end
   describe "GET #keys" do
     it "gets all keys" do
-      keys = ["test1", "test2"]
+      keys = %w[test1 test2]
       REDIS.set(keys[0], "test1_key")
       REDIS.set(keys[1], "test2_key")
 
       get redis_keys_path
-      expect(response.body).to eq(keys.to_json)
+      expect(response.body).to eq(keys.reverse.to_json)
     end
   end
 end

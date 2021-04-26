@@ -39,7 +39,7 @@ RSpec.describe Stockpot::RedisController, type: :request do
       REDIS.set(keys[1], "test2_key")
 
       get redis_keys_path
-      expect(response.body).to eq(keys.reverse.to_json)
+      expect(JSON.parse(response.body)).to match_array(keys)
     end
   end
 end

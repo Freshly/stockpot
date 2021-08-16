@@ -3,16 +3,22 @@
 require "rails_helper"
 
 RSpec.describe Stockpot::RecordsController, type: :request do
-  let(:json_headers) { { "CONTENT_TYPE": "application/json" }}
-  let(:user) { FactoryBot.create(:user) }
-  let(:second_user) { FactoryBot.create(:user) }
-  let(:user_admin) { FactoryBot.create(:users_admin) }
+  let(:json_headers) { { "CONTENT_TYPE": "application/json" } }
+  let(:user) { create(:user) }
+  let(:second_user) { create(:user) }
+  let(:user_admin) { create(:users_admin) }
   let(:expected) do
     {
       status: 400,
       message: "You need to provide at least one model name as an argument",
       backtrace: "No backtrace",
     }
+  end
+
+  before do
+    ## This allows us to trigger the errors in transactions without
+    # the logging part. (which may confuse people that run the spec file)
+    allow_any_instance_of(Logger).to receive(:warn).and_return(nil)
   end
 
   describe "POST #records" do
@@ -45,17 +51,17 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }
 
       post records_path, params: params.to_json, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(User.last.first_name).to eql(first_name)
       expect(json_body["users"][0]["first_name"]).to eq(first_name)
       expect(json_body["users"][0]["last_name"]).to eq(last_name)
     end
 
     it "creates multiple records" do
-      first_name_1 = "firstName1"
-      last_name_1 = "lastName1"
-      first_name_2 = "firstName2"
-      last_name_2 = "lastName2"
+      first_name1 = "firstName1"
+      last_name1 = "lastName1"
+      first_name2 = "firstName2"
+      last_name2 = "lastName2"
       params = {
         factories: [
           {
@@ -63,12 +69,12 @@ RSpec.describe Stockpot::RecordsController, type: :request do
             factory: "user",
             attributes: [
               {
-                first_name: first_name_1,
-                last_name: last_name_1,
+                first_name: first_name1,
+                last_name: last_name1,
               },
               {
-                first_name: first_name_2,
-                last_name: last_name_2,
+                first_name: first_name2,
+                last_name: last_name2,
               },
             ],
           },
@@ -76,12 +82,12 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       post records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
-      expect(User.all.count).to eql(2)
-      expect(json_body["users"][0]["first_name"]).to eq(first_name_1)
-      expect(json_body["users"][0]["last_name"]).to eq(last_name_1)
-      expect(json_body["users"][1]["first_name"]).to eq(first_name_2)
-      expect(json_body["users"][1]["last_name"]).to eq(last_name_2)
+      expect(response.status).to be 202
+      expect(User.all.count).to be(2)
+      expect(json_body["users"][0]["first_name"]).to eq(first_name1)
+      expect(json_body["users"][0]["last_name"]).to eq(last_name1)
+      expect(json_body["users"][1]["first_name"]).to eq(first_name2)
+      expect(json_body["users"][1]["last_name"]).to eq(last_name2)
     end
 
     it "rolls back transactions if an error is triggered" do
@@ -105,8 +111,8 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       post records_path, params: params, headers: json_headers
-      expect(response.status).to eql 417
-      expect(User.all.count).to eql(0)
+      expect(response.status).to be 417
+      expect(User.all.count).to be(0)
     end
   end
 
@@ -128,7 +134,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }
 
       get records_path, params: params, headers: json_headers
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
       expect(json_body["users"].count).to eq(2)
     end
 
@@ -144,10 +150,10 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }
 
       get records_path, params: params, headers: json_headers
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
       expect(json_body["users"][0]["first_name"]).to eq(user.first_name)
       expect(json_body["users"][0]["last_name"]).to eq(user.last_name)
-      expect(User.all.count).to eql(1)
+      expect(User.all.count).to be(1)
     end
 
     it "returns the correct namespaced records" do
@@ -162,9 +168,9 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }
 
       get records_path, params: params, headers: json_headers
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
       expect(json_body["usersAdmins"][0]["is_admin"]).to eq(user_admin.is_admin)
-      expect(Users::Admin.all.count).to eql(1)
+      expect(Users::Admin.all.count).to be(1)
     end
 
     it "returns one record even if it is requested more than once" do
@@ -183,7 +189,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }
 
       get records_path, params: params, headers: json_headers
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
       expect(json_body["users"].count).to eq(1)
       expect(json_body["users"][0]["first_name"]).to eq(user.first_name)
       expect(json_body["users"][0]["last_name"]).to eq(user.last_name)
@@ -209,7 +215,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
 
       expect(User.first).to eql(user)
       delete records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(User.all).to be_empty
     end
 
@@ -225,7 +231,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       delete records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(User.all).to be_empty
     end
 
@@ -246,9 +252,9 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       delete records_path, params: params, headers: json_headers
-      expect(response.status).to eql 400
-      expect(User.all.count).to eql(2)
-      expect(Users::Admin.all.count).to eql(1)
+      expect(response.status).to be 400
+      expect(User.all.count).to be(2)
+      expect(Users::Admin.all.count).to be(1)
     end
 
     it "deletes models that are namespaced" do
@@ -263,9 +269,9 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       delete records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(json_body["usersAdmins"][0]["is_admin"]).to eq(user_admin.is_admin)
-      expect(Users::Admin.all.count).to eql(0)
+      expect(Users::Admin.all.count).to be(0)
     end
   end
 
@@ -284,9 +290,9 @@ RSpec.describe Stockpot::RecordsController, type: :request do
             model: "user",
             id: user.id,
             update: { first_name: updated_first_name },
-          }
-        ]
-       }.to_json
+          },
+        ],
+      }.to_json
 
       expect(User.last.first_name).to eql(user.first_name)
       put records_path, params: params, headers: json_headers
@@ -304,7 +310,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
             update: { first_name: updated_first_name },
           },
         ],
-       }.to_json
+      }.to_json
 
       put records_path, params: params, headers: json_headers
       expect(User.last.first_name).to eql(updated_first_name)
@@ -325,7 +331,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
 
       expect(Users::Admin.first.is_admin).to be_truthy
       put records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(json_body["usersAdmins"][0]["is_admin"]).to eq(false)
     end
 
@@ -348,7 +354,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       put records_path, params: params, headers: json_headers
-      expect(response.status).to eql 417
+      expect(response.status).to be 417
       expect(User.first.first_name).to eq(user.first_name)
       expect(User.last.first_name).to eq(second_user.first_name)
     end
@@ -371,7 +377,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       }.to_json
 
       put records_path, params: params, headers: json_headers
-      expect(response.status).to eql 202
+      expect(response.status).to be 202
       expect(json_body["users"][0]["first_name"]).to eq("hello")
       expect(json_body["users"][0]["last_name"]).to eq("world")
       expect(json_body["users"].length).to eq(1)

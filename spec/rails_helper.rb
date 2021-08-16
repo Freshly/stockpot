@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'factory_bot'
 require 'timecop'
+require 'pry'
 
 ENV['RAILS_ENV'] ||= 'test'
 

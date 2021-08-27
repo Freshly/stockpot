@@ -2,10 +2,13 @@
 
 module AssertionHelpers
   def check_error_response(response, expected)
-    parsed_body = JSON.parse(response.body)
+    parsed_body = JSON.parse(response.body)["error"]
 
-    expect(response.code).to eql expected.dig(:code).to_s
-    expect(parsed_body.dig("error", "status")).to eql expected.dig(:code)
-    expect(parsed_body.dig("error", "message")).to eql expected.dig(:message)
+    expect(response).to have_http_status(expected[:status])
+    expected.with_indifferent_access.each_key do |prop|
+      expectation_body = expected.with_indifferent_access
+
+      expect(parsed_body[prop]).to eql expectation_body[prop]
+    end
   end
 end

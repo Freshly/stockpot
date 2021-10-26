@@ -1,0 +1,62 @@
+version: 2.1
+
+restore_freshly_gem_cache: &restore_freshly_gem_cache
+  restore_cache:
+    keys:
+      - freshly-gems-v1.338-{{ checksum "Gemfile.lock" }}
+      - freshly-gems-v1.338-
+
+bundle_install: &bundle_install
+  run:
+    name: Bundle Install
+    command: |
+      bundle check || bundle install --deployment --frozen
+
+save_freshly_gem_cache: &save_freshly_gem_cache
+  save_cache:
+    key: freshly-gems-v1.338-{{ checksum "Gemfile.lock" }}
+    paths:
+      - vendor/bundle
+
+create_and_load_db: &create_and_load_db
+  run:
+    name: Create and Load DB
+    command: |
+      RAILS_ENV=test bundle exec rake db:create --trace
+      RAILS_ENV=test bundle exec rake db:schema:load --trace
+
+executors:
+  ruby_and_services:
+    docker:
+      - image: freshlyci/circle-base:ruby-2.7.4-node-14.17.4
+        environment:
+          PGHOST: 127.0.0.1
+          DATABASE_USER: postgres
+      - image: circleci/redis:latest
+      - image: circleci/postgres
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test_database
+          POSTGRES_HOST_AUTH_METHOD: trust
+      - image: memcached:latest
+
+jobs:
+  rspec_units:
+    executor: ruby_and_services
+    steps:
+      - checkout
+      - *restore_freshly_gem_cache
+      - *bundle_install
+      - *save_freshly_gem_cache
+      - *create_and_load_db
+      - run:
+          name: RSPEC
+          command: |
+            echo "About to run the following specs:"
+            bundle exec rspec
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - rspec_units

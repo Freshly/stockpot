@@ -6,6 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/vendor/
 
 # rspec failure tracking
 .rspec_status
@@ -21,3 +22,6 @@ spec/dummy/log/
 # ignore JetBrains IDE stuff
 .idea
 .generators
+
+# ignore VSCode ID stuff
+.vscode/

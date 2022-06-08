@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v.0.4.4] - 2022-06-08
+
+## Fixed
+- Modified index method to be able to return multiple records with no primary key. Previously it would only return one record
+
 ## [v.0.4.3] - 2021-10-25
 
 ## Added

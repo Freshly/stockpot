@@ -4,6 +4,8 @@ require "rails_helper"
 
 RSpec.describe Stockpot::RecordsController, type: :request do
   let(:json_headers) { { "CONTENT_TYPE": "application/json" } }
+  let(:address) { create(:address) }
+  let(:second_address) { create(:address, city: "New York City") }
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
   let(:user_admin) { create(:users_admin) }
@@ -122,7 +124,7 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       check_error_response(response, expected)
     end
 
-    it "can return multiple records" do
+    it "can return multiple records of the same model" do
       user
       second_user
       params = {
@@ -136,6 +138,63 @@ RSpec.describe Stockpot::RecordsController, type: :request do
       get records_path, params: params, headers: json_headers
       expect(response.status).to be 200
       expect(json_body["users"].count).to eq(2)
+    end
+
+    it "can return multiple records of differing models" do
+      address
+      params = {
+        models: [
+          {
+            model: "user",
+          },
+          {
+            model: "address",
+          },
+        ],
+      }
+
+      get records_path, params: params, headers: json_headers
+      expect(response.status).to be 200
+      expect(json_body["users"].count).to eq(1)
+      expect(json_body["addresses"].count).to eq(1)
+    end
+
+    context "there are multiple records with no primary key" do
+      before(:each) do
+        address
+        second_address
+      end
+
+       it "can return multiple records" do
+        params = {
+          models: [
+            {
+              model: "address",
+            },
+          ],
+        }
+
+        get records_path, params: params, headers: json_headers
+        expect(response.status).to be 200
+        expect(json_body["addresses"].count).to eq(2)
+      end
+
+      it "returns the correct record" do
+        params = {
+          models: [
+            {
+              model: "address",
+              user_id: address.user_id,
+            },
+          ],
+        }
+
+        get records_path, params: params, headers: json_headers
+        expect(response.status).to be 200
+        expect(json_body["addresses"].count).to be(1)
+        expect(json_body["addresses"][0]["city"]).to eq(address.city)
+        expect(User.all.count).to be(2)
+      end
     end
 
     it "returns the correct record" do

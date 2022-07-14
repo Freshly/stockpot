@@ -27,7 +27,7 @@ module Stockpot
 
         @response_data[formatted_model] = [] unless @response_data.key?(formatted_model)
         @response_data[formatted_model].concat(class_name.constantize.where(models[i].except(:model)))
-        @response_data[formatted_model].reverse!.uniq! { |obj| obj["id"] }
+        @response_data[formatted_model].reverse!.uniq!
       end
       render json: @response_data, status: :ok
     end
